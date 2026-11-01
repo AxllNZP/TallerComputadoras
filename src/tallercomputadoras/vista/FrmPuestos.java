@@ -44,22 +44,25 @@ public class FrmPuestos extends javax.swing.JFrame {
     }
 
     private void mostrarPuestos() {
-        modeloTabla.setRowCount(0);
+    modeloTabla.setRowCount(0);
 
-        for (int puesto = 0; puesto < 3; puesto++) {
-            String manana = matriz.estaOcupado(puesto, 0)
+    String[] nombresTurno = {"Mañana", "Tarde"};
+
+    for (int puesto = 0; puesto < 3; puesto++) {
+        String[] estadosTurno = new String[nombresTurno.length];
+
+        for (int turno = 0; turno < nombresTurno.length; turno++) {
+            estadosTurno[turno] = matriz.estaOcupado(puesto, turno)
                     ? "Ocupado" : "Disponible";
-
-            String tarde = matriz.estaOcupado(puesto, 1)
-                    ? "Ocupado" : "Disponible";
-
-            modeloTabla.addRow(new Object[]{
-                "Puesto " + (puesto + 1),
-                manana,
-                tarde
-            });
         }
+
+        modeloTabla.addRow(new Object[]{
+            "Puesto " + (puesto + 1),
+            estadosTurno[0],
+            estadosTurno[1]
+        });
     }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.

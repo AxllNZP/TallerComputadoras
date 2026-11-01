@@ -20,16 +20,18 @@ public class ListaOrdenes {
                 .toUpperCase(java.util.Locale.ROOT);
 
         NodoOrden actual = primero;
+        OrdenReparacion ordenEncontrada = null;
 
         while (actual != null) {
             if (actual.getOrden().getCodigo().equals(clave)) {
-                return actual.getOrden();
+                ordenEncontrada = actual.getOrden();
+                break;
             }
 
             actual = actual.getSiguiente();
         }
 
-        return null;
+        return ordenEncontrada;
     }
 
     public void insertar(OrdenReparacion orden) {
@@ -86,48 +88,49 @@ public class ListaOrdenes {
                 "Entregado"
         ));
     }
-    
+
     public boolean eliminar(String codigo) {
-    String clave = codigo.trim()
-            .toUpperCase(java.util.Locale.ROOT);
+        String clave = codigo.trim()
+                .toUpperCase(java.util.Locale.ROOT);
 
-    NodoOrden actual = primero;
-    NodoOrden anterior = null;
+        NodoOrden actual = primero;
+        NodoOrden anterior = null;
 
-    while (actual != null) {
-        if (actual.getOrden().getCodigo().equals(clave)) {
+        while (actual != null) {
+            if (actual.getOrden().getCodigo().equals(clave)) {
 
-            if (anterior == null) {
-                primero = actual.getSiguiente();
-            } else {
-                anterior.setSiguiente(actual.getSiguiente());
+                if (anterior == null) {
+                    primero = actual.getSiguiente();
+                } else {
+                    anterior.setSiguiente(actual.getSiguiente());
+                }
+
+                actual.setSiguiente(null);
+                return true;
             }
 
-            actual.setSiguiente(null);
-            return true;
+            anterior = actual;
+            actual = actual.getSiguiente();
         }
 
-        anterior = actual;
-        actual = actual.getSiguiente();
-    }
-
-    return false;
-}
-    public boolean actualizar(String codigo, String cliente, String telefono,
-        String equipo, String falla, String estado) {
-
-    OrdenReparacion orden = buscarPorCodigo(codigo);
-
-    if (orden == null) {
         return false;
     }
 
-    orden.setCliente(cliente);
-    orden.setTelefono(telefono);
-    orden.setEquipo(equipo);
-    orden.setFalla(falla);
-    orden.setEstado(estado);
+    public boolean actualizar(String codigo, String cliente, String telefono,
+            String equipo, String falla, String estado) {
 
-    return true;
-}
+        OrdenReparacion orden = buscarPorCodigo(codigo);
+
+        if (orden == null) {
+            return false;
+        }
+
+        orden.setCliente(cliente);
+        orden.setTelefono(telefono);
+        orden.setEquipo(equipo);
+        orden.setFalla(falla);
+        orden.setEstado(estado);
+
+        return true;
+    }
 }

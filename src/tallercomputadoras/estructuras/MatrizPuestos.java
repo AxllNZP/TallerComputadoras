@@ -17,23 +17,25 @@ public class MatrizPuestos {
 
     public boolean ocupar(int puesto, int turno) {
         validarPosicion(puesto, turno);
+        boolean operacionExitosa = false;
 
-        if (ocupados[puesto][turno]) {
-            return false;
+        if (!ocupados[puesto][turno]) {
+            ocupados[puesto][turno] = true;
+            operacionExitosa = true;
         }
 
-        ocupados[puesto][turno] = true;
-        return true;
+        return operacionExitosa;
     }
 
     public boolean liberar(int puesto, int turno) {
         validarPosicion(puesto, turno);
+        boolean operacionExitosa = false;
 
-        if (!ocupados[puesto][turno]) {
-            return false;
+        if (ocupados[puesto][turno]) {
+            ocupados[puesto][turno] = false;
+            operacionExitosa = true;
         }
 
-        ocupados[puesto][turno] = false;
-        return true;
+        return operacionExitosa;
     }
 }

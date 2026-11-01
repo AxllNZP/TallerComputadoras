@@ -24,14 +24,15 @@ public class PilaEstados {
     }
 
     public String desapilar() {
-        if (estaVacia()) {
-            return null;
+        String estadoRetirado = null;
+
+        if (!estaVacia()) {
+            NodoEstado retirado = cima;
+            cima = retirado.getSiguiente();
+            retirado.setSiguiente(null);
+            estadoRetirado = retirado.getEstado();
         }
 
-        NodoEstado retirado = cima;
-        cima = retirado.getSiguiente();
-        retirado.setSiguiente(null);
-
-        return retirado.getEstado();
+        return estadoRetirado;
     }
 }

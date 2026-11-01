@@ -53,24 +53,21 @@ public class ArbolRepuestos {
                 .toUpperCase(java.util.Locale.ROOT);
 
         NodoRepuesto actual = raiz;
+        Repuesto encontrado = null;
 
-        while (actual != null) {
-            int comparacion = clave.compareTo(
-                    actual.getRepuesto().getCodigo()
-            );
+        while (actual != null && encontrado == null) {
+            int comparacion = clave.compareTo(actual.getRepuesto().getCodigo());
 
             if (comparacion == 0) {
-                return actual.getRepuesto();
-            }
-
-            if (comparacion < 0) {
+                encontrado = actual.getRepuesto();
+            } else if (comparacion < 0) {
                 actual = actual.getIzquierda();
             } else {
                 actual = actual.getDerecha();
             }
         }
 
-        return null;
+        return encontrado;
     }
 
     public Repuesto buscarSecuencial(String codigo) {
@@ -80,27 +77,23 @@ public class ArbolRepuestos {
         return buscarPreorden(raiz, clave);
     }
 
-    private Repuesto buscarPreorden(
-            NodoRepuesto nodo, String codigo) {
+    private Repuesto buscarPreorden(NodoRepuesto nodo, String codigo) {
+    Repuesto encontrado = null;
 
-        if (nodo == null) {
-            return null;
-        }
-
+    if (nodo != null) {
         if (nodo.getRepuesto().getCodigo().equals(codigo)) {
-            return nodo.getRepuesto();
+            encontrado = nodo.getRepuesto();
+        } else {
+            encontrado = buscarPreorden(nodo.getIzquierda(), codigo);
+
+            if (encontrado == null) {
+                encontrado = buscarPreorden(nodo.getDerecha(), codigo);
+            }
         }
-
-        Repuesto encontrado = buscarPreorden(
-                nodo.getIzquierda(), codigo
-        );
-
-        if (encontrado != null) {
-            return encontrado;
-        }
-
-        return buscarPreorden(nodo.getDerecha(), codigo);
     }
+
+    return encontrado;
+}
 
     private void precargar() {
         insertar(new Repuesto(

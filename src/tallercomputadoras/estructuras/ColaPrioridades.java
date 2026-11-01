@@ -20,16 +20,17 @@ public class ColaPrioridades {
                 .toUpperCase(java.util.Locale.ROOT);
 
         NodoAtencion actual = primero;
+        AtencionDiagnostico encontrada = null;
 
-        while (actual != null) {
+        while (actual != null && encontrada == null) {
             if (actual.getAtencion().getCodigo().equals(clave)) {
-                return actual.getAtencion();
+                encontrada = actual.getAtencion();
+            } else {
+                actual = actual.getSiguiente();
             }
-
-            actual = actual.getSiguiente();
         }
 
-        return null;
+        return encontrada;
     }
 
     public void encolar(AtencionDiagnostico atencion) {
@@ -40,39 +41,38 @@ public class ColaPrioridades {
         }
 
         NodoAtencion nuevo = new NodoAtencion(atencion);
+        boolean vaAlFrente = primero == null
+                || atencion.getPrioridad() < primero.getAtencion().getPrioridad();
 
-        if (primero == null
-                || atencion.getPrioridad()
-                < primero.getAtencion().getPrioridad()) {
-
+        if (vaAlFrente) {
             nuevo.setSiguiente(primero);
             primero = nuevo;
-            return;
+        } else {
+            NodoAtencion actual = primero;
+
+            while (actual.getSiguiente() != null
+                    && actual.getSiguiente().getAtencion().getPrioridad()
+                    <= atencion.getPrioridad()) {
+
+                actual = actual.getSiguiente();
+            }
+
+            nuevo.setSiguiente(actual.getSiguiente());
+            actual.setSiguiente(nuevo);
         }
-
-        NodoAtencion actual = primero;
-
-        while (actual.getSiguiente() != null
-                && actual.getSiguiente().getAtencion().getPrioridad()
-                <= atencion.getPrioridad()) {
-
-            actual = actual.getSiguiente();
-        }
-
-        nuevo.setSiguiente(actual.getSiguiente());
-        actual.setSiguiente(nuevo);
     }
 
     public AtencionDiagnostico atender() {
-        if (primero == null) {
-            return null;
+        AtencionDiagnostico atencionAtendida = null;
+
+        if (primero != null) {
+            NodoAtencion atendido = primero;
+            primero = atendido.getSiguiente();
+            atendido.setSiguiente(null);
+            atencionAtendida = atendido.getAtencion();
         }
 
-        NodoAtencion atendido = primero;
-        primero = atendido.getSiguiente();
-        atendido.setSiguiente(null);
-
-        return atendido.getAtencion();
+        return atencionAtendida;
     }
 
     private void precargar() {

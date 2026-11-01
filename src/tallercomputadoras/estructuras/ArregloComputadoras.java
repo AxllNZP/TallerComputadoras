@@ -51,70 +51,73 @@ public class ArregloComputadoras {
 
         return computadoras[posicion];
     }
-    
+
     public int buscarPorCodigo(String codigo) {
-    String codigoNormalizado = codigo.trim()
-            .toUpperCase(java.util.Locale.ROOT);
+        String codigoNormalizado = codigo.trim()
+                .toUpperCase(java.util.Locale.ROOT);
+        int posicionEncontrada = -1;
 
-    for (int i = 0; i < cantidad; i++) {
-        if (computadoras[i].getCodigo().equals(codigoNormalizado)) {
-            return i;
+        for (int i = 0; i < cantidad; i++) {
+            if (computadoras[i].getCodigo().equals(codigoNormalizado)) {
+                posicionEncontrada = i;
+                break;
+            }
         }
+
+        return posicionEncontrada;
     }
 
-    return -1;
-}
+    public void insertar(Computadora computadora) {
+        if (cantidad >= computadoras.length) {
+            throw new IllegalStateException(
+                    "El arreglo está lleno. Máximo 50 computadoras."
+            );
+        }
 
-public void insertar(Computadora computadora) {
-    if (cantidad >= computadoras.length) {
-        throw new IllegalStateException(
-                "El arreglo está lleno. Máximo 50 computadoras."
-        );
+        if (buscarPorCodigo(computadora.getCodigo()) != -1) {
+            throw new IllegalArgumentException(
+                    "Ya existe una computadora con ese código."
+            );
+        }
+
+        computadoras[cantidad] = computadora;
+        cantidad++;
     }
 
-    if (buscarPorCodigo(computadora.getCodigo()) != -1) {
-        throw new IllegalArgumentException(
-                "Ya existe una computadora con ese código."
-        );
+    public boolean eliminar(String codigo) {
+        int posicion = buscarPorCodigo(codigo);
+
+        if (posicion == -1) {
+            return false;
+        }
+
+        for (int i = posicion; i < cantidad - 1; i++) {
+            computadoras[i] = computadoras[i + 1];
+        }
+
+        cantidad--;
+        computadoras[cantidad] = null;
+
+        return true;
     }
 
-    computadoras[cantidad] = computadora;
-    cantidad++;
-}
+    public boolean actualizar(String codigo, String marca, String modelo,
+            String falla, String cliente, String telefono) {
 
-public boolean eliminar(String codigo) {
-    int posicion = buscarPorCodigo(codigo);
+        int posicion = buscarPorCodigo(codigo);
 
-    if (posicion == -1) {
-        return false;
+        if (posicion == -1) {
+            return false;
+        }
+
+        Computadora computadora = computadoras[posicion];
+
+        computadora.setMarca(marca);
+        computadora.setModelo(modelo);
+        computadora.setFalla(falla);
+        computadora.setCliente(cliente);
+        computadora.setTelefono(telefono);
+
+        return true;
     }
-
-    for (int i = posicion; i < cantidad - 1; i++) {
-        computadoras[i] = computadoras[i + 1];
-    }
-
-    cantidad--;
-    computadoras[cantidad] = null;
-
-    return true;
-}
-public boolean actualizar(String codigo, String marca, String modelo,
-        String falla, String cliente, String telefono) {
-
-    int posicion = buscarPorCodigo(codigo);
-
-    if (posicion == -1) {
-        return false;
-    }
-
-    Computadora computadora = computadoras[posicion];
-
-    computadora.setMarca(marca);
-    computadora.setModelo(modelo);
-    computadora.setFalla(falla);
-    computadora.setCliente(cliente);
-    computadora.setTelefono(telefono);
-
-    return true;
-}
 }
