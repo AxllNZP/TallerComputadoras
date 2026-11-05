@@ -4,11 +4,25 @@
  */
 package tallercomputadoras.vista;
 
+import tallercomputadoras.estructuras.ArbolRepuestos;
+import tallercomputadoras.estructuras.ArregloComputadoras;
+import tallercomputadoras.estructuras.ColaPrioridades;
+import tallercomputadoras.estructuras.ListaOrdenes;
+import tallercomputadoras.estructuras.MatrizPuestos;
+import tallercomputadoras.estructuras.PilaEstados;
+
 /**
  *
  * @author AXELL
  */
 public class FrmPrincipal extends javax.swing.JFrame {
+
+     private final ArregloComputadoras computadoras = new ArregloComputadoras();
+    private final MatrizPuestos puestos = new MatrizPuestos();
+    private final ListaOrdenes ordenes = new ListaOrdenes();
+    private final ColaPrioridades cola = new ColaPrioridades();
+    private final PilaEstados pila = new PilaEstados();
+    private final ArbolRepuestos repuestos = new ArbolRepuestos();
 
     private FrmComputadoras ventanaComputadoras;
     private FrmPuestos ventanaPuestos;
@@ -164,7 +178,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void btnComputadorasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComputadorasActionPerformed
         if (ventanaComputadoras == null) {
-            ventanaComputadoras = new FrmComputadoras();
+            ventanaComputadoras = new FrmComputadoras(computadoras);
         }
         ventanaComputadoras.setVisible(true);
         ventanaComputadoras.toFront();        // TODO add your handling code here:
@@ -172,7 +186,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void btnPuestosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPuestosActionPerformed
         if (ventanaPuestos == null) {
-            ventanaPuestos = new FrmPuestos();
+            ventanaPuestos = new FrmPuestos(puestos);
         }
         ventanaPuestos.setVisible(true);
         ventanaPuestos.toFront();        // TODO add your handling code here:
@@ -180,7 +194,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void btnOrdenesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrdenesActionPerformed
         if (ventanaOrdenes == null) {
-            ventanaOrdenes = new FrmOrdenes();
+            ventanaOrdenes = new FrmOrdenes(ordenes);
         }
         ventanaOrdenes.setVisible(true);
         ventanaOrdenes.toFront();        // TODO add your handling code here:
@@ -188,7 +202,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void btnDiagnosticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDiagnosticoActionPerformed
         if (ventanaDiagnostico == null) {
-            ventanaDiagnostico = new FrmDiagnostico();
+            ventanaDiagnostico = new FrmDiagnostico(cola);
         }
         ventanaDiagnostico.setVisible(true);
         ventanaDiagnostico.toFront();        // TODO add your handling code here:
@@ -196,7 +210,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void btnHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistorialActionPerformed
         if (ventanaHistorial == null) {
-            ventanaHistorial = new FrmHistorial();
+            ventanaHistorial = new FrmHistorial(pila);
         }
         ventanaHistorial.setVisible(true);
         ventanaHistorial.toFront();        // TODO add your handling code here:
@@ -204,7 +218,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void btnRepuestosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRepuestosActionPerformed
         if (ventanaRepuestos == null) {
-            ventanaRepuestos = new FrmRepuestos();
+            ventanaRepuestos = new FrmRepuestos(repuestos);
         }
         ventanaRepuestos.setVisible(true);
         ventanaRepuestos.toFront();        // TODO add your handling code here:

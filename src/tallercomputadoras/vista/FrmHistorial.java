@@ -8,7 +8,6 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import tallercomputadoras.modelo.FichaTrabajo;
 import tallercomputadoras.estructuras.PilaEstados;
-import tallercomputadoras.estructuras.NodoEstado;
 
 /**
  *
@@ -21,8 +20,9 @@ public class FrmHistorial extends javax.swing.JFrame {
     /**
      * Creates new form FrmHistorial
      */
-    public FrmHistorial() {
+    public FrmHistorial(PilaEstados pila) {
         initComponents();
+        this.pila = pila;
         configurarTabla();
         mostrarFicha();
         mostrarHistorial();
@@ -35,7 +35,7 @@ public class FrmHistorial extends javax.swing.JFrame {
             "Laptop Lenovo ThinkPad"
     );
 
-    private final PilaEstados pila = new PilaEstados();
+    private final PilaEstados pila;
     private DefaultTableModel modeloTabla;
 
     private void configurarTabla() {
@@ -64,18 +64,14 @@ public class FrmHistorial extends javax.swing.JFrame {
     private void mostrarHistorial() {
         modeloTabla.setRowCount(0);
 
-        NodoEstado actual = pila.getCima();
-        int posicion = 1;
+        pila.recorrer(estado -> {
+            int posicion = modeloTabla.getRowCount() + 1;
 
-        while (actual != null) {
             modeloTabla.addRow(new Object[]{
                 posicion == 1 ? "1 — Cima" : String.valueOf(posicion),
-                actual.getEstado()
+                estado
             });
-
-            actual = actual.getSiguiente();
-            posicion++;
-        }
+        });
     }
 
     /**
@@ -241,7 +237,7 @@ public class FrmHistorial extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FrmHistorial().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new FrmHistorial(new PilaEstados()).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -11,10 +11,20 @@ public class ListaOrdenes {
         precargar();
     }
 
-    public NodoOrden getPrimero() {
-        return primero;
+    public void recorrer(java.util.function.Consumer<OrdenReparacion> accion) {
+        NodoOrden actual = primero;
+
+        while (actual != null) {
+            accion.accept(actual.getOrden());
+            actual = actual.getSiguiente();
+        }
     }
 
+    /*
+     * Búsqueda Secuencial (Lineal).
+     * Complejidad: O(n).
+     * Criterio: Itera secuencialmente nodo por nodo desde el puntero inicial ('primero') de la estructura.
+     */
     public OrdenReparacion buscarPorCodigo(String codigo) {
         String clave = codigo.trim()
                 .toUpperCase(java.util.Locale.ROOT);
@@ -22,18 +32,21 @@ public class ListaOrdenes {
         NodoOrden actual = primero;
         OrdenReparacion ordenEncontrada = null;
 
-        while (actual != null) {
+        while (actual != null && ordenEncontrada == null) {
             if (actual.getOrden().getCodigo().equals(clave)) {
                 ordenEncontrada = actual.getOrden();
-                break;
+            } else {
+                actual = actual.getSiguiente();
             }
-
-            actual = actual.getSiguiente();
         }
 
         return ordenEncontrada;
     }
 
+    /*
+     * Operación de Inserción.
+     * Reglas de punteros: Se recorre la lista hasta el último nodo y se reconecta su referencia 'siguiente' hacia el nuevo nodo creado.
+     */
     public void insertar(OrdenReparacion orden) {
         if (buscarPorCodigo(orden.getCodigo()) != null) {
             throw new IllegalArgumentException(
@@ -45,16 +58,15 @@ public class ListaOrdenes {
 
         if (primero == null) {
             primero = nuevo;
-            return;
+        } else {
+            NodoOrden actual = primero;
+
+            while (actual.getSiguiente() != null) {
+                actual = actual.getSiguiente();
+            }
+
+            actual.setSiguiente(nuevo);
         }
-
-        NodoOrden actual = primero;
-
-        while (actual.getSiguiente() != null) {
-            actual = actual.getSiguiente();
-        }
-
-        actual.setSiguiente(nuevo);
     }
 
     private void precargar() {
@@ -89,14 +101,19 @@ public class ListaOrdenes {
         ));
     }
 
+    /*
+     * Operación de Eliminación.
+     * Reglas de punteros: Se enlaza la referencia 'siguiente' del nodo 'anterior' con el nodo 'siguiente' del actual, dejando al nodo actual sin referencias para ser recolectado por el Garbage Collector.
+     */
     public boolean eliminar(String codigo) {
         String clave = codigo.trim()
                 .toUpperCase(java.util.Locale.ROOT);
 
         NodoOrden actual = primero;
         NodoOrden anterior = null;
+        boolean exito = false;
 
-        while (actual != null) {
+        while (actual != null && !exito) {
             if (actual.getOrden().getCodigo().equals(clave)) {
 
                 if (anterior == null) {
@@ -106,31 +123,31 @@ public class ListaOrdenes {
                 }
 
                 actual.setSiguiente(null);
-                return true;
+                exito = true;
+            } else {
+                anterior = actual;
+                actual = actual.getSiguiente();
             }
-
-            anterior = actual;
-            actual = actual.getSiguiente();
         }
 
-        return false;
+        return exito;
     }
 
     public boolean actualizar(String codigo, String cliente, String telefono,
             String equipo, String falla, String estado) {
 
         OrdenReparacion orden = buscarPorCodigo(codigo);
+        boolean exito = false;
 
-        if (orden == null) {
-            return false;
+        if (orden != null) {
+            orden.setCliente(cliente);
+            orden.setTelefono(telefono);
+            orden.setEquipo(equipo);
+            orden.setFalla(falla);
+            orden.setEstado(estado);
+            exito = true;
         }
 
-        orden.setCliente(cliente);
-        orden.setTelefono(telefono);
-        orden.setEquipo(equipo);
-        orden.setFalla(falla);
-        orden.setEstado(estado);
-
-        return true;
+        return exito;
     }
 }

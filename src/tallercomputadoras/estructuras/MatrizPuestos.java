@@ -10,11 +10,21 @@ public class MatrizPuestos {
         }
     }
 
+    /*
+     * Acceso Directo Indexado.
+     * Complejidad: O(1).
+     * Criterio: Recuperación inmediata mediante coordenadas espaciales fijas (fila, columna).
+     */
     public boolean estaOcupado(int puesto, int turno) {
         validarPosicion(puesto, turno);
         return ocupados[puesto][turno];
     }
 
+    /*
+     * Acceso Directo Indexado.
+     * Complejidad: O(1).
+     * Criterio: Mutación inmediata del estado mediante coordenadas espaciales fijas (fila, columna).
+     */
     public boolean ocupar(int puesto, int turno) {
         validarPosicion(puesto, turno);
         boolean operacionExitosa = false;
@@ -27,6 +37,11 @@ public class MatrizPuestos {
         return operacionExitosa;
     }
 
+    /*
+     * Acceso Directo Indexado.
+     * Complejidad: O(1).
+     * Criterio: Mutación inmediata del estado mediante coordenadas espaciales fijas (fila, columna).
+     */
     public boolean liberar(int puesto, int turno) {
         validarPosicion(puesto, turno);
         boolean operacionExitosa = false;

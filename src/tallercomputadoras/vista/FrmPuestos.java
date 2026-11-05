@@ -14,7 +14,7 @@ import tallercomputadoras.estructuras.MatrizPuestos;
  */
 public class FrmPuestos extends javax.swing.JFrame {
 
-    private final MatrizPuestos matriz = new MatrizPuestos();
+    private final MatrizPuestos matriz;
     private DefaultTableModel modeloTabla;
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmPuestos.class.getName());
@@ -22,8 +22,9 @@ public class FrmPuestos extends javax.swing.JFrame {
     /**
      * Creates new form FrmPuestos
      */
-    public FrmPuestos() {
+    public FrmPuestos(MatrizPuestos matriz) {
         initComponents();
+        this.matriz = matriz;
         configurarTabla();
         mostrarPuestos();
         setLocationRelativeTo(null);
@@ -234,7 +235,7 @@ public class FrmPuestos extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FrmPuestos().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new FrmPuestos(new MatrizPuestos()).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

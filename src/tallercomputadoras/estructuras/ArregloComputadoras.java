@@ -52,16 +52,22 @@ public class ArregloComputadoras {
         return computadoras[posicion];
     }
 
+    /*
+     * Búsqueda Secuencial (Lineal).
+     * Complejidad: O(n).
+     * Criterio: Itera posición por posición (índices) desde el inicio del arreglo hasta la 'cantidad' registrada.
+     */
     public int buscarPorCodigo(String codigo) {
         String codigoNormalizado = codigo.trim()
                 .toUpperCase(java.util.Locale.ROOT);
         int posicionEncontrada = -1;
+        int i = 0;
 
-        for (int i = 0; i < cantidad; i++) {
+        while (i < cantidad && posicionEncontrada == -1) {
             if (computadoras[i].getCodigo().equals(codigoNormalizado)) {
                 posicionEncontrada = i;
-                break;
             }
+            i++;
         }
 
         return posicionEncontrada;
@@ -86,38 +92,38 @@ public class ArregloComputadoras {
 
     public boolean eliminar(String codigo) {
         int posicion = buscarPorCodigo(codigo);
+        boolean exito = false;
 
-        if (posicion == -1) {
-            return false;
+        if (posicion != -1) {
+            for (int i = posicion; i < cantidad - 1; i++) {
+                computadoras[i] = computadoras[i + 1];
+            }
+
+            cantidad--;
+            computadoras[cantidad] = null;
+            exito = true;
         }
 
-        for (int i = posicion; i < cantidad - 1; i++) {
-            computadoras[i] = computadoras[i + 1];
-        }
-
-        cantidad--;
-        computadoras[cantidad] = null;
-
-        return true;
+        return exito;
     }
 
     public boolean actualizar(String codigo, String marca, String modelo,
             String falla, String cliente, String telefono) {
 
         int posicion = buscarPorCodigo(codigo);
+        boolean exito = false;
 
-        if (posicion == -1) {
-            return false;
+        if (posicion != -1) {
+            Computadora computadora = computadoras[posicion];
+
+            computadora.setMarca(marca);
+            computadora.setModelo(modelo);
+            computadora.setFalla(falla);
+            computadora.setCliente(cliente);
+            computadora.setTelefono(telefono);
+            exito = true;
         }
 
-        Computadora computadora = computadoras[posicion];
-
-        computadora.setMarca(marca);
-        computadora.setModelo(modelo);
-        computadora.setFalla(falla);
-        computadora.setCliente(cliente);
-        computadora.setTelefono(telefono);
-
-        return true;
+        return exito;
     }
 }

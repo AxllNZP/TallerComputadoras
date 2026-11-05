@@ -2,21 +2,21 @@ package tallercomputadoras.estructuras;
 
 import tallercomputadoras.modelo.OrdenReparacion;
 
-public class NodoOrden {
+class NodoOrden {
 
     private final OrdenReparacion orden;
     private NodoOrden siguiente;
 
-    public NodoOrden(OrdenReparacion orden) {
+    NodoOrden(OrdenReparacion orden) {
         this.orden = orden;
         this.siguiente = null;
     }
 
-    public OrdenReparacion getOrden() {
+    OrdenReparacion getOrden() {
         return orden;
     }
 
-    public NodoOrden getSiguiente() {
+    NodoOrden getSiguiente() {
         return siguiente;
     }
 

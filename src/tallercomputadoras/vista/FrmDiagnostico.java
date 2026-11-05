@@ -8,7 +8,6 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import tallercomputadoras.modelo.AtencionDiagnostico;
 import tallercomputadoras.estructuras.ColaPrioridades;
-import tallercomputadoras.estructuras.NodoAtencion;
 
 /**
  *
@@ -16,7 +15,7 @@ import tallercomputadoras.estructuras.NodoAtencion;
  */
 public class FrmDiagnostico extends javax.swing.JFrame {
 
-    private final ColaPrioridades cola = new ColaPrioridades();
+    private final ColaPrioridades cola;
     private DefaultTableModel modeloTabla;
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmDiagnostico.class.getName());
@@ -24,7 +23,8 @@ public class FrmDiagnostico extends javax.swing.JFrame {
     /**
      * Creates new form FrmDiagnostico
      */
-    public FrmDiagnostico() {
+    public FrmDiagnostico(ColaPrioridades cola) {
+        this.cola = cola;
         initComponents();
         configurarTabla();
         mostrarCola();
@@ -50,21 +50,13 @@ public class FrmDiagnostico extends javax.swing.JFrame {
     private void mostrarCola() {
         modeloTabla.setRowCount(0);
 
-        NodoAtencion actual = cola.getPrimero();
-
-        while (actual != null) {
-            AtencionDiagnostico atencion = actual.getAtencion();
-
-            modeloTabla.addRow(new Object[]{
-                atencion.getCodigo(),
-                atencion.getCliente(),
-                atencion.getEquipo(),
-                atencion.getFalla(),
-                atencion.getPrioridadTexto()
-            });
-
-            actual = actual.getSiguiente();
-        }
+        cola.recorrer(atencion -> modeloTabla.addRow(new Object[]{
+            atencion.getCodigo(),
+            atencion.getCliente(),
+            atencion.getEquipo(),
+            atencion.getFalla(),
+            atencion.getPrioridadTexto()
+        }));
     }
 
     private void limpiarCampos() {
@@ -308,7 +300,7 @@ limpiarCampos();        // TODO add your handling code here:
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FrmDiagnostico().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new FrmDiagnostico(new ColaPrioridades()).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

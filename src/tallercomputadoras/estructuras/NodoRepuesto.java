@@ -2,25 +2,25 @@ package tallercomputadoras.estructuras;
 
 import tallercomputadoras.modelo.Repuesto;
 
-public class NodoRepuesto {
+class NodoRepuesto {
 
     private final Repuesto repuesto;
     private NodoRepuesto izquierda;
     private NodoRepuesto derecha;
 
-    public NodoRepuesto(Repuesto repuesto) {
+    NodoRepuesto(Repuesto repuesto) {
         this.repuesto = repuesto;
     }
 
-    public Repuesto getRepuesto() {
+    Repuesto getRepuesto() {
         return repuesto;
     }
 
-    public NodoRepuesto getIzquierda() {
+    NodoRepuesto getIzquierda() {
         return izquierda;
     }
 
-    public NodoRepuesto getDerecha() {
+    NodoRepuesto getDerecha() {
         return derecha;
     }
 

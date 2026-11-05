@@ -1,20 +1,20 @@
 package tallercomputadoras.estructuras;
 
-public class NodoEstado {
+class NodoEstado {
 
     private final String estado;
     private NodoEstado siguiente;
 
-    public NodoEstado(String estado) {
+    NodoEstado(String estado) {
         this.estado = estado;
         siguiente = null;
     }
 
-    public String getEstado() {
+    String getEstado() {
         return estado;
     }
 
-    public NodoEstado getSiguiente() {
+    NodoEstado getSiguiente() {
         return siguiente;
     }
 

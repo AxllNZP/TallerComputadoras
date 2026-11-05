@@ -7,7 +7,6 @@ package tallercomputadoras.vista;
 import javax.swing.table.DefaultTableModel;
 import tallercomputadoras.modelo.OrdenReparacion;
 import tallercomputadoras.estructuras.ListaOrdenes;
-import tallercomputadoras.estructuras.NodoOrden;
 
 /**
  *
@@ -15,7 +14,7 @@ import tallercomputadoras.estructuras.NodoOrden;
  */
 public class FrmOrdenes extends javax.swing.JFrame {
 
-    private final ListaOrdenes lista = new ListaOrdenes();
+    private final ListaOrdenes lista;
     private DefaultTableModel modeloTabla;
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmOrdenes.class.getName());
@@ -23,7 +22,9 @@ public class FrmOrdenes extends javax.swing.JFrame {
     /**
      * Creates new form FrmOrdenes
      */
-    public FrmOrdenes() {
+    public FrmOrdenes(ListaOrdenes lista) {
+        initComponents();
+        this.lista = lista;
         initComponents();
         configurarTabla();
         mostrarOrdenes();
@@ -61,22 +62,14 @@ public class FrmOrdenes extends javax.swing.JFrame {
     private void mostrarOrdenes() {
         modeloTabla.setRowCount(0);
 
-        NodoOrden actual = lista.getPrimero();
-
-        while (actual != null) {
-            OrdenReparacion orden = actual.getOrden();
-
-            modeloTabla.addRow(new Object[]{
-                orden.getCodigo(),
-                orden.getCliente(),
-                orden.getTelefono(),
-                orden.getEquipo(),
-                orden.getFalla(),
-                orden.getEstado()
-            });
-
-            actual = actual.getSiguiente();
-        }
+        lista.recorrer(orden -> modeloTabla.addRow(new Object[]{
+            orden.getCodigo(),
+            orden.getCliente(),
+            orden.getTelefono(),
+            orden.getEquipo(),
+            orden.getFalla(),
+            orden.getEstado()
+        }));
     }
 
     private void cargarSeleccion() {
@@ -456,7 +449,7 @@ public class FrmOrdenes extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FrmOrdenes().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new FrmOrdenes(new ListaOrdenes()).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -2,21 +2,21 @@ package tallercomputadoras.estructuras;
 
 import tallercomputadoras.modelo.AtencionDiagnostico;
 
-public class NodoAtencion {
+class NodoAtencion {
 
     private final AtencionDiagnostico atencion;
     private NodoAtencion siguiente;
 
-    public NodoAtencion(AtencionDiagnostico atencion) {
+    NodoAtencion(AtencionDiagnostico atencion) {
         this.atencion = atencion;
         siguiente = null;
     }
 
-    public AtencionDiagnostico getAtencion() {
+    AtencionDiagnostico getAtencion() {
         return atencion;
     }
 
-    public NodoAtencion getSiguiente() {
+    NodoAtencion getSiguiente() {
         return siguiente;
     }
 

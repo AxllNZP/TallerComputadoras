@@ -8,8 +8,13 @@ public class PilaEstados {
         cima = null;
     }
 
-    public NodoEstado getCima() {
-        return cima;
+    public void recorrer(java.util.function.Consumer<String> accion) {
+        NodoEstado actual = cima;
+
+        while (actual != null) {
+            accion.accept(actual.getEstado());
+            actual = actual.getSiguiente();
+        }
     }
 
     public boolean estaVacia() {

@@ -11,8 +11,18 @@ public class ArbolRepuestos {
         precargar();
     }
 
-    public NodoRepuesto getRaiz() {
-        return raiz;
+    public void recorrerInorden(java.util.function.Consumer<Repuesto> accion) {
+        recorrerInorden(raiz, accion);
+    }
+
+    private void recorrerInorden(NodoRepuesto nodo,
+            java.util.function.Consumer<Repuesto> accion) {
+
+        if (nodo != null) {
+            recorrerInorden(nodo.getIzquierda(), accion);
+            accion.accept(nodo.getRepuesto());
+            recorrerInorden(nodo.getDerecha(), accion);
+        }
     }
 
     public void insertar(Repuesto repuesto) {
@@ -25,29 +35,40 @@ public class ArbolRepuestos {
         raiz = insertarNodo(raiz, repuesto);
     }
 
+    /*
+     * Operación de Inserción.
+     * Reglas de punteros: Se evalúa el orden de la clave. Al alcanzar un nodo nulo, se crea el nuevo nodo y se reconecta la referencia (izquierda o derecha) del nodo padre en la llamada recursiva.
+     */
     private NodoRepuesto insertarNodo(
             NodoRepuesto nodo, Repuesto repuesto) {
 
-        if (nodo == null) {
-            return new NodoRepuesto(repuesto);
+        NodoRepuesto resultado = nodo;
+
+        if (resultado == null) {
+            resultado = new NodoRepuesto(repuesto);
+        } else {
+            int comparacion = repuesto.getCodigo()
+                    .compareTo(resultado.getRepuesto().getCodigo());
+
+            if (comparacion < 0) {
+                resultado.setIzquierda(
+                        insertarNodo(resultado.getIzquierda(), repuesto)
+                );
+            } else if (comparacion > 0) {
+                resultado.setDerecha(
+                        insertarNodo(resultado.getDerecha(), repuesto)
+                );
+            }
         }
 
-        int comparacion = repuesto.getCodigo()
-                .compareTo(nodo.getRepuesto().getCodigo());
-
-        if (comparacion < 0) {
-            nodo.setIzquierda(
-                    insertarNodo(nodo.getIzquierda(), repuesto)
-            );
-        } else if (comparacion > 0) {
-            nodo.setDerecha(
-                    insertarNodo(nodo.getDerecha(), repuesto)
-            );
-        }
-
-        return nodo;
+        return resultado;
     }
-
+    
+    /*
+     * Búsqueda Jerárquica.
+     * Complejidad: O(log n).
+     * Criterio: Evaluación del valor en el nodo raíz actual; desciende por la rama izquierda para valores menores y por la rama derecha para valores mayores.
+     */
     public Repuesto buscarIndexada(String codigo) {
         String clave = codigo.trim()
                 .toUpperCase(java.util.Locale.ROOT);
@@ -94,6 +115,10 @@ public class ArbolRepuestos {
 
     return encontrado;
 }
+    
+    
+    
+    
 
     private void precargar() {
         insertar(new Repuesto(

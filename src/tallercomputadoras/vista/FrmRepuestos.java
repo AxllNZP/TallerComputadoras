@@ -8,7 +8,6 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import tallercomputadoras.modelo.Repuesto;
 import tallercomputadoras.estructuras.ArbolRepuestos;
-import tallercomputadoras.estructuras.NodoRepuesto;
 
 /**
  *
@@ -16,15 +15,16 @@ import tallercomputadoras.estructuras.NodoRepuesto;
  */
 public class FrmRepuestos extends javax.swing.JFrame {
 
-    private final ArbolRepuestos arbol = new ArbolRepuestos();
+    private final ArbolRepuestos arbol;
     private DefaultTableModel modeloTabla;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmRepuestos.class.getName());
 
     /**
      * Creates new form FrmRepuestos
      */
-    public FrmRepuestos() {
+    public FrmRepuestos(ArbolRepuestos arbol) {
         initComponents();
+        this.arbol = arbol;
         configurarTabla();
         mostrarRepuestos();
         setLocationRelativeTo(null);
@@ -46,25 +46,12 @@ public class FrmRepuestos extends javax.swing.JFrame {
 
     private void mostrarRepuestos() {
         modeloTabla.setRowCount(0);
-        recorrerInorden(arbol.getRaiz());
-    }
 
-    private void recorrerInorden(NodoRepuesto nodo) {
-        if (nodo == null) {
-            return;
-        }
-
-        recorrerInorden(nodo.getIzquierda());
-
-        Repuesto repuesto = nodo.getRepuesto();
-
-        modeloTabla.addRow(new Object[]{
+        arbol.recorrerInorden(repuesto -> modeloTabla.addRow(new Object[]{
             repuesto.getCodigo(),
             repuesto.getNombre(),
             repuesto.getStock()
-        });
-
-        recorrerInorden(nodo.getDerecha());
+        }));
     }
 
     private void limpiarCampos() {
@@ -329,7 +316,7 @@ public class FrmRepuestos extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FrmRepuestos().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new FrmRepuestos(new ArbolRepuestos()).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -14,7 +14,7 @@ import tallercomputadoras.estructuras.ArregloComputadoras;
  */
 public class FrmComputadoras extends javax.swing.JFrame {
 
-    private final ArregloComputadoras arreglo = new ArregloComputadoras();
+    private final ArregloComputadoras arreglo;
     private DefaultTableModel modeloTabla;
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmComputadoras.class.getName());
@@ -22,8 +22,9 @@ public class FrmComputadoras extends javax.swing.JFrame {
     /**
      * Creates new form FrmComputadoras
      */
-    public FrmComputadoras() {
+    public FrmComputadoras(ArregloComputadoras arreglo) {
         initComponents();
+        this.arreglo = arreglo;
         configurarTabla();
         mostrarComputadoras();
         setLocationRelativeTo(null);
@@ -456,7 +457,7 @@ javax.swing.JOptionPane.showMessageDialog(
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FrmComputadoras().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new FrmComputadoras(new ArregloComputadoras()).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

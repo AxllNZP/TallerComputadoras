@@ -11,8 +11,13 @@ public class ColaPrioridades {
         precargar();
     }
 
-    public NodoAtencion getPrimero() {
-        return primero;
+    public void recorrer(java.util.function.Consumer<AtencionDiagnostico> accion) {
+        NodoAtencion actual = primero;
+
+        while (actual != null) {
+            accion.accept(actual.getAtencion());
+            actual = actual.getSiguiente();
+        }
     }
 
     public AtencionDiagnostico buscarPorCodigo(String codigo) {
