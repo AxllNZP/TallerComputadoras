@@ -17,12 +17,13 @@ import tallercomputadoras.estructuras.PilaEstados;
  */
 public class FrmPrincipal extends javax.swing.JFrame {
 
-     private final ArregloComputadoras computadoras = new ArregloComputadoras();
+    private final ArregloComputadoras computadoras = new ArregloComputadoras();
     private final MatrizPuestos puestos = new MatrizPuestos();
     private final ListaOrdenes ordenes = new ListaOrdenes();
     private final ColaPrioridades cola = new ColaPrioridades();
     private final PilaEstados pila = new PilaEstados();
-    private final ArbolRepuestos repuestos = new ArbolRepuestos();
+    private final tallercomputadoras.estructuras.ABBRepuestos arbolABB = new tallercomputadoras.estructuras.ABBRepuestos();
+    private final tallercomputadoras.estructuras.AVLRepuestos arbolAVL = new tallercomputadoras.estructuras.AVLRepuestos();
 
     private FrmComputadoras ventanaComputadoras;
     private FrmPuestos ventanaPuestos;
@@ -30,6 +31,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private FrmDiagnostico ventanaDiagnostico;
     private FrmHistorial ventanaHistorial;
     private FrmRepuestos ventanaRepuestos;
+    private FrmDiagnosticoGuiado ventanaDiagnosticoGuiado; // NUEVO
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmPrincipal.class.getName());
 
@@ -64,6 +66,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        btnDiagnosticoGuiado = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Taller de reparación de computadoras");
@@ -102,41 +105,53 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         jLabel6.setText("Leonardo Mattias Cuba Rojas");
 
+        btnDiagnosticoGuiado.setText("Diagnóstico Guiado (Árbol Binario)");
+        btnDiagnosticoGuiado.addActionListener(this::btnDiagnosticoGuiadoActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(49, 49, 49)
+                .addGap(46, 46, 46)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2)
-                        .addGap(84, 84, 84))
+                        .addGap(3, 3, 3)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel2)
+                                .addGap(84, 84, 84))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnPuestos)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel4)
+                                .addGap(33, 33, 33))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnComputadoras)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnRepuestos)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel3)
+                                .addGap(70, 70, 70))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnSalir)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnSalir)
+                                        .addGap(185, 185, 185))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnDiagnosticoGuiado)
+                                        .addGap(185, 185, 185)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel6)))
                             .addComponent(btnHistorial)
                             .addComponent(btnDiagnostico)
                             .addComponent(btnOrdenes))
-                        .addGap(87, 87, 87)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6))
-                        .addContainerGap(59, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnPuestos)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel4)
-                        .addGap(33, 33, 33))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnComputadoras)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnRepuestos)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel3)
-                        .addGap(70, 70, 70))))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -164,7 +179,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnHistorial)
-                .addGap(51, 51, 51)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnDiagnosticoGuiado)
+                .addGap(22, 22, 22)
                 .addComponent(btnSalir)
                 .addContainerGap(22, Short.MAX_VALUE))
         );
@@ -218,11 +235,19 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void btnRepuestosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRepuestosActionPerformed
         if (ventanaRepuestos == null) {
-            ventanaRepuestos = new FrmRepuestos(repuestos);
+            ventanaRepuestos = new FrmRepuestos(arbolABB, arbolAVL);
         }
         ventanaRepuestos.setVisible(true);
-        ventanaRepuestos.toFront();        // TODO add your handling code here:
+        ventanaRepuestos.toFront();
     }//GEN-LAST:event_btnRepuestosActionPerformed
+
+    private void btnDiagnosticoGuiadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDiagnosticoGuiadoActionPerformed
+        if (ventanaDiagnosticoGuiado == null) {
+            ventanaDiagnosticoGuiado = new FrmDiagnosticoGuiado();
+        }
+        ventanaDiagnosticoGuiado.setVisible(true);
+        ventanaDiagnosticoGuiado.toFront();
+    }//GEN-LAST:event_btnDiagnosticoGuiadoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -252,6 +277,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnComputadoras;
     private javax.swing.JButton btnDiagnostico;
+    private javax.swing.JButton btnDiagnosticoGuiado;
     private javax.swing.JButton btnHistorial;
     private javax.swing.JButton btnOrdenes;
     private javax.swing.JButton btnPuestos;

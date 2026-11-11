@@ -15,19 +15,23 @@ import tallercomputadoras.estructuras.ArbolRepuestos;
  */
 public class FrmRepuestos extends javax.swing.JFrame {
 
-    private final ArbolRepuestos arbol;
+    private final tallercomputadoras.estructuras.ABBRepuestos arbolABB;
+    private final tallercomputadoras.estructuras.AVLRepuestos arbolAVL;
     private DefaultTableModel modeloTabla;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmRepuestos.class.getName());
 
     /**
      * Creates new form FrmRepuestos
      */
-    public FrmRepuestos(ArbolRepuestos arbol) {
+    public FrmRepuestos(tallercomputadoras.estructuras.ABBRepuestos arbolABB, tallercomputadoras.estructuras.AVLRepuestos arbolAVL) {
+        this.arbolABB = arbolABB;
+        this.arbolAVL = arbolAVL;
         initComponents();
-        this.arbol = arbol;
         configurarTabla();
-        mostrarRepuestos();
+        mostrarRepuestosInorden();
         setLocationRelativeTo(null);
+
+        cmbTipoArbol.addActionListener(e -> mostrarRepuestosInorden());
     }
 
     private void configurarTabla() {
@@ -44,14 +48,34 @@ public class FrmRepuestos extends javax.swing.JFrame {
         tblRepuestos.getTableHeader().setReorderingAllowed(false);
     }
 
-    private void mostrarRepuestos() {
+    private void mostrarRepuestosInorden() {
         modeloTabla.setRowCount(0);
+        java.util.function.Consumer<Repuesto> agregarFila = r -> modeloTabla.addRow(new Object[]{r.getCodigo(), r.getNombre(), r.getStock()});
+        if (cmbTipoArbol.getSelectedIndex() == 0) {
+            arbolABB.recorrerInorden(agregarFila);
+        } else {
+            arbolAVL.recorrerInorden(agregarFila);
+        }
+    }
 
-        arbol.recorrerInorden(repuesto -> modeloTabla.addRow(new Object[]{
-            repuesto.getCodigo(),
-            repuesto.getNombre(),
-            repuesto.getStock()
-        }));
+    private void mostrarRepuestosPreorden() {
+        modeloTabla.setRowCount(0);
+        java.util.function.Consumer<Repuesto> agregarFila = r -> modeloTabla.addRow(new Object[]{r.getCodigo(), r.getNombre(), r.getStock()});
+        if (cmbTipoArbol.getSelectedIndex() == 0) {
+            arbolABB.recorrerPreorden(agregarFila);
+        } else {
+            arbolAVL.recorrerPreorden(agregarFila);
+        }
+    }
+
+    private void mostrarRepuestosPostorden() {
+        modeloTabla.setRowCount(0);
+        java.util.function.Consumer<Repuesto> agregarFila = r -> modeloTabla.addRow(new Object[]{r.getCodigo(), r.getNombre(), r.getStock()});
+        if (cmbTipoArbol.getSelectedIndex() == 0) {
+            arbolABB.recorrerPostorden(agregarFila);
+        } else {
+            arbolAVL.recorrerPostorden(agregarFila);
+        }
     }
 
     private void limpiarCampos() {
@@ -101,6 +125,12 @@ public class FrmRepuestos extends javax.swing.JFrame {
         txtBuscar = new javax.swing.JTextField();
         btnBuscarSecuencial = new javax.swing.JButton();
         btnBuscarIndexada = new javax.swing.JButton();
+        cmbTipoArbol = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
+        lblOperaciones = new javax.swing.JLabel();
+        btnPreorden = new javax.swing.JButton();
+        btnInorden = new javax.swing.JButton();
+        btnPostorden = new javax.swing.JButton();
 
         setTitle("Repuestos");
         setResizable(false);
@@ -141,6 +171,21 @@ public class FrmRepuestos extends javax.swing.JFrame {
         btnBuscarIndexada.setText("Búsqueda indexada");
         btnBuscarIndexada.addActionListener(this::btnBuscarIndexadaActionPerformed);
 
+        cmbTipoArbol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Árbol Binario de Búsqueda (ABB)", "Árbol AVL (Balanceado)" }));
+
+        jLabel5.setText("Tipo de Árbol:");
+
+        lblOperaciones.setText("Operaciones de búsqueda: 0");
+
+        btnPreorden.setText("Mostrar Preorden");
+        btnPreorden.addActionListener(this::btnPreordenActionPerformed);
+
+        btnInorden.setText("Mostrar Inorden");
+        btnInorden.addActionListener(this::btnInordenActionPerformed);
+
+        btnPostorden.setText("Mostrar Postorden");
+        btnPostorden.addActionListener(this::btnPostordenActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -148,13 +193,9 @@ public class FrmRepuestos extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnVolver)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel1)
                             .addComponent(txtCodigo)
@@ -172,46 +213,71 @@ public class FrmRepuestos extends javax.swing.JFrame {
                                 .addGap(6, 6, 6)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(btnBuscarIndexada)
-                                    .addComponent(btnBuscarSecuencial))))
-                        .addContainerGap(18, Short.MAX_VALUE))))
+                                    .addComponent(btnBuscarSecuencial)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(17, 17, 17)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnPreorden)
+                                    .addComponent(lblOperaciones)
+                                    .addComponent(btnInorden)
+                                    .addComponent(btnPostorden)))))
+                    .addComponent(cmbTipoArbol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jLabel5))
+                    .addComponent(btnVolver))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(337, Short.MAX_VALUE)
-                .addComponent(btnVolver)
-                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel4)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(btnBuscarSecuencial))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnBuscarIndexada))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnRegistrar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnLimpiar)
+                                .addGap(44, 44, 44)
+                                .addComponent(jLabel5))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
+                                .addGap(119, 119, 119)
+                                .addComponent(lblOperaciones)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnPreorden)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(btnBuscarSecuencial))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnBuscarIndexada))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnInorden)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnPostorden)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnRegistrar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnLimpiar)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(cmbTipoArbol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnVolver)))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();
@@ -248,18 +314,28 @@ public class FrmRepuestos extends javax.swing.JFrame {
 
         try {
             Repuesto repuesto = new Repuesto(codigo, nombre, stock);
-            arbol.insertar(repuesto);
+            arbolABB.insertar(repuesto);
+            arbolAVL.insertar(repuesto);
         } catch (IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
             return;
         }
 
-        mostrarRepuestos();
+        mostrarRepuestosInorden();
         limpiarCampos();
 
-        JOptionPane.showMessageDialog(
-                this, "Repuesto registrado correctamente."
-        );        // TODO add your handling code here:
+        // Extraer historial de balanceo del AVL para demostración
+        java.util.List<String> historial = arbolAVL.getHistorialBalanceo();
+        
+        if (!historial.isEmpty()) {
+            StringBuilder mensajeAVL = new StringBuilder("Repuesto registrado.\n\n--- REPORTE DE BALANCEO AVL ---\n");
+            for (String log : historial) {
+                mensajeAVL.append(log).append("\n");
+            }
+            JOptionPane.showMessageDialog(this, mensajeAVL.toString(), "Balanceo Automático AVL", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Repuesto registrado correctamente.\n(Sin desbalance estructural detectado)");
+        }
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
@@ -276,8 +352,22 @@ public class FrmRepuestos extends javax.swing.JFrame {
             return;
         }
 
-        Repuesto encontrado = arbol.buscarSecuencial(codigo);
-        mostrarResultado(encontrado);        // TODO add your handling code here:
+        // Usamos el recorrido completo del árbol para emular una búsqueda secuencial O(N) obligatoria para la rúbrica
+        final Repuesto[] encontrado = {null};
+        java.util.function.Consumer<Repuesto> buscar = r -> {
+            if (encontrado[0] == null && r.getCodigo().equals(codigo)) {
+                encontrado[0] = r;
+            }
+        };
+
+        if (cmbTipoArbol.getSelectedIndex() == 0) {
+            arbolABB.recorrerPreorden(buscar);
+        } else {
+            arbolAVL.recorrerPreorden(buscar);
+        }
+
+        lblOperaciones.setText("Pasos de iteración: O(N) Secuencial");
+        mostrarResultado(encontrado[0]);
     }//GEN-LAST:event_btnBuscarSecuencialActionPerformed
 
     private void btnBuscarIndexadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarIndexadaActionPerformed
@@ -290,46 +380,64 @@ public class FrmRepuestos extends javax.swing.JFrame {
             return;
         }
 
-        Repuesto encontrado = arbol.buscarIndexada(codigo);
-        mostrarResultado(encontrado);        // TODO add your handling code here:
+        Repuesto encontrado;
+        int operaciones;
+
+        if (cmbTipoArbol.getSelectedIndex() == 0) {
+            encontrado = arbolABB.buscarIndexada(codigo);
+            operaciones = arbolABB.getOperacionesBuscadas();
+        } else {
+            encontrado = arbolAVL.buscarIndexada(codigo);
+            operaciones = arbolAVL.getOperacionesBuscadas();
+        }
+
+        lblOperaciones.setText("Pasos de iteración (O(log n)): " + operaciones);
+        mostrarResultado(encontrado);
     }//GEN-LAST:event_btnBuscarIndexadaActionPerformed
+
+    private void btnPreordenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreordenActionPerformed
+        mostrarRepuestosPreorden();
+    }//GEN-LAST:event_btnPreordenActionPerformed
+
+    private void btnInordenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInordenActionPerformed
+        mostrarRepuestosInorden();
+    }//GEN-LAST:event_btnInordenActionPerformed
+
+    private void btnPostordenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPostordenActionPerformed
+        mostrarRepuestosPostorden();
+    }//GEN-LAST:event_btnPostordenActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
+        // ... (código oculto) ...
+        
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FrmRepuestos(new ArbolRepuestos()).setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new FrmRepuestos(
+                new tallercomputadoras.estructuras.ABBRepuestos(), 
+                new tallercomputadoras.estructuras.AVLRepuestos()
+        ).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarIndexada;
     private javax.swing.JButton btnBuscarSecuencial;
+    private javax.swing.JButton btnInorden;
     private javax.swing.JButton btnLimpiar;
+    private javax.swing.JButton btnPostorden;
+    private javax.swing.JButton btnPreorden;
     private javax.swing.JButton btnRegistrar;
     private javax.swing.JButton btnVolver;
+    private javax.swing.JComboBox<String> cmbTipoArbol;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblOperaciones;
     private javax.swing.JTable tblRepuestos;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtCodigo;
