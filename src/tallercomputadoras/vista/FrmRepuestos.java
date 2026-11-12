@@ -7,7 +7,6 @@ package tallercomputadoras.vista;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import tallercomputadoras.modelo.Repuesto;
-import tallercomputadoras.estructuras.ArbolRepuestos;
 
 /**
  *
@@ -100,6 +99,21 @@ public class FrmRepuestos extends javax.swing.JFrame {
                 + "Stock: " + repuesto.getStock()
         );
     }
+    
+    // Método auxiliar para evitar redundancia estructural
+    private void evaluarRebalanceoPostEliminacion(String mensajeExito) {
+        java.util.List<String> historial = arbolAVL.getHistorialBalanceo();
+        
+        if (!historial.isEmpty()) {
+            StringBuilder mensajeAVL = new StringBuilder(mensajeExito + "\n\n--- REPORTE DE REBALANCEO AVL ---\n");
+            for (String log : historial) {
+                mensajeAVL.append(log).append("\n");
+            }
+            javax.swing.JOptionPane.showMessageDialog(this, mensajeAVL.toString(), "Balanceo Automático AVL (Post-Eliminación)", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, mensajeExito + "\n(Sin desbalance estructural detectado)");
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -131,6 +145,8 @@ public class FrmRepuestos extends javax.swing.JFrame {
         btnPreorden = new javax.swing.JButton();
         btnInorden = new javax.swing.JButton();
         btnPostorden = new javax.swing.JButton();
+        btnEliminarPredecesor = new javax.swing.JButton();
+        btnEliminarSucesor = new javax.swing.JButton();
 
         setTitle("Repuestos");
         setResizable(false);
@@ -186,6 +202,12 @@ public class FrmRepuestos extends javax.swing.JFrame {
         btnPostorden.setText("Mostrar Postorden");
         btnPostorden.addActionListener(this::btnPostordenActionPerformed);
 
+        btnEliminarPredecesor.setText("Eliminar (Predecesor)");
+        btnEliminarPredecesor.addActionListener(this::btnEliminarPredecesorActionPerformed);
+
+        btnEliminarSucesor.setText("Eliminar (Sucesor)");
+        btnEliminarSucesor.addActionListener(this::btnEliminarSucesorActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -196,37 +218,47 @@ public class FrmRepuestos extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel1)
-                            .addComponent(txtCodigo)
-                            .addComponent(jLabel2)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-                            .addComponent(jLabel3)
-                            .addComponent(txtStock, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
-                            .addComponent(btnRegistrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnLimpiar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel1)
+                                    .addComponent(txtCodigo)
+                                    .addComponent(jLabel2)
+                                    .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                                    .addComponent(jLabel3)
+                                    .addComponent(txtStock, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                                    .addComponent(btnRegistrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnLimpiar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnBuscarIndexada)
-                                    .addComponent(btnBuscarSecuencial)))
+                                    .addComponent(jLabel4)
+                                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(btnBuscarIndexada)
+                                            .addComponent(btnBuscarSecuencial)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(17, 17, 17)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(btnPreorden)
+                                            .addComponent(lblOperaciones)
+                                            .addComponent(btnInorden)
+                                            .addComponent(btnPostorden)))))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(17, 17, 17)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnPreorden)
-                                    .addComponent(lblOperaciones)
-                                    .addComponent(btnInorden)
-                                    .addComponent(btnPostorden)))))
-                    .addComponent(cmbTipoArbol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(12, 12, 12)
+                                .addComponent(jLabel5)))
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel5))
-                    .addComponent(btnVolver))
-                .addContainerGap(106, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnVolver)
+                            .addComponent(cmbTipoArbol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 115, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnEliminarPredecesor, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(btnEliminarSucesor)
+                                .addContainerGap())))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -278,6 +310,12 @@ public class FrmRepuestos extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnVolver)))
                 .addContainerGap(19, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnEliminarSucesor)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnEliminarPredecesor)
+                .addContainerGap())
         );
 
         pack();
@@ -326,7 +364,7 @@ public class FrmRepuestos extends javax.swing.JFrame {
 
         // Extraer historial de balanceo del AVL para demostración
         java.util.List<String> historial = arbolAVL.getHistorialBalanceo();
-        
+
         if (!historial.isEmpty()) {
             StringBuilder mensajeAVL = new StringBuilder("Repuesto registrado.\n\n--- REPORTE DE BALANCEO AVL ---\n");
             for (String log : historial) {
@@ -407,16 +445,60 @@ public class FrmRepuestos extends javax.swing.JFrame {
         mostrarRepuestosPostorden();
     }//GEN-LAST:event_btnPostordenActionPerformed
 
+    private void btnEliminarPredecesorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarPredecesorActionPerformed
+        String codigo = txtCodigo.getText().trim();
+
+        if (codigo.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Escribe o selecciona el código del repuesto a eliminar.");
+            return;
+        }
+
+        boolean eliminadoABB = arbolABB.eliminarPredecesor(codigo);
+        boolean eliminadoAVL = arbolAVL.eliminarPredecesor(codigo);
+
+        if (!eliminadoABB || !eliminadoAVL) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Código no encontrado.");
+            return;
+        }
+
+        mostrarRepuestosInorden();
+        limpiarCampos();
+
+        evaluarRebalanceoPostEliminacion("Eliminación vía Predecesor exitosa.");
+    }//GEN-LAST:event_btnEliminarPredecesorActionPerformed
+
+    private void btnEliminarSucesorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarSucesorActionPerformed
+        String codigo = txtCodigo.getText().trim();
+
+        if (codigo.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Escribe o selecciona el código del repuesto a eliminar.");
+            return;
+        }
+
+        boolean eliminadoABB = arbolABB.eliminarSucesor(codigo);
+        boolean eliminadoAVL = arbolAVL.eliminarSucesor(codigo);
+
+        if (!eliminadoABB || !eliminadoAVL) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Código no encontrado.");
+            return;
+        }
+
+        mostrarRepuestosInorden();
+        limpiarCampos();
+
+        evaluarRebalanceoPostEliminacion("Eliminación vía Sucesor exitosa.");
+    }//GEN-LAST:event_btnEliminarSucesorActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         // ... (código oculto) ...
-        
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new FrmRepuestos(
-                new tallercomputadoras.estructuras.ABBRepuestos(), 
+                new tallercomputadoras.estructuras.ABBRepuestos(),
                 new tallercomputadoras.estructuras.AVLRepuestos()
         ).setVisible(true));
     }
@@ -424,6 +506,8 @@ public class FrmRepuestos extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarIndexada;
     private javax.swing.JButton btnBuscarSecuencial;
+    private javax.swing.JButton btnEliminarPredecesor;
+    private javax.swing.JButton btnEliminarSucesor;
     private javax.swing.JButton btnInorden;
     private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnPostorden;

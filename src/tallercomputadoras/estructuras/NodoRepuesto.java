@@ -4,7 +4,7 @@ import tallercomputadoras.modelo.Repuesto;
 
 class NodoRepuesto {
 
-    private final Repuesto repuesto;
+    private Repuesto repuesto; // Modificado: Se quitó 'final' para permitir eliminación por reemplazo.
     private NodoRepuesto izquierda;
     private NodoRepuesto derecha;
     private int altura; // Necesario para el factor de balanceo AVL
@@ -41,5 +41,9 @@ class NodoRepuesto {
 
     void setAltura(int altura) {
         this.altura = altura;
+    }
+
+    void setRepuesto(Repuesto repuesto) {
+        this.repuesto = repuesto;
     }
 }

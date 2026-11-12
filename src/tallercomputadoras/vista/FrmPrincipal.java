@@ -4,7 +4,6 @@
  */
 package tallercomputadoras.vista;
 
-import tallercomputadoras.estructuras.ArbolRepuestos;
 import tallercomputadoras.estructuras.ArregloComputadoras;
 import tallercomputadoras.estructuras.ColaPrioridades;
 import tallercomputadoras.estructuras.ListaOrdenes;

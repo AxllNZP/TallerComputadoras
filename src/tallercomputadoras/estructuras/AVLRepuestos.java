@@ -2,6 +2,7 @@ package tallercomputadoras.estructuras;
 
 import tallercomputadoras.modelo.Repuesto;
 import java.util.function.Consumer;
+
 public class AVLRepuestos {
 
     private NodoRepuesto raiz;
@@ -27,11 +28,10 @@ public class AVLRepuestos {
     }
 
     private int obtenerBalance(NodoRepuesto nodo) {
-        return nodo == null ? 0 : obtenerAltura(nodo.getIzquierda()) - obtenerAltura(nodo.getDerecha());
+        return nodo == null ? 0 : obtenerAltura(nodo.getDerecha()) - obtenerAltura(nodo.getIzquierda());
     }
 
     // --- ROTACIONES ---
-
     private NodoRepuesto rotacionDerecha(NodoRepuesto y) {
         historialBalanceo.add(" -> Ejecutando Rotación Simple Derecha en nodo: " + y.getRepuesto().getCodigo());
         NodoRepuesto x = y.getIzquierda();
@@ -61,7 +61,6 @@ public class AVLRepuestos {
     }
 
     // --- INSERCIÓN AVL ---
-
     public void insertar(Repuesto repuesto) {
         if (buscarIndexada(repuesto.getCodigo()) != null) {
             throw new IllegalArgumentException("Ya existe un repuesto con ese código.");
@@ -89,32 +88,32 @@ public class AVLRepuestos {
 
         int balance = obtenerBalance(nodo);
 
-        // Registro de factor de equilibrio crítico
+        // Registro de factor de equilibrio crítico (Derecha - Izquierda)
         if (balance > 1 || balance < -1) {
             historialBalanceo.add("Desbalance detectado en nodo: " + nodo.getRepuesto().getCodigo() + " (Factor de equilibrio: " + balance + ")");
         }
 
-        // Caso Izquierda Izquierda
-        if (balance > 1 && repuesto.getCodigo().compareTo(nodo.getIzquierda().getRepuesto().getCodigo()) < 0) {
-            historialBalanceo.add("Caso identificado: Izquierda-Izquierda (LL)");
-            return rotacionDerecha(nodo);
-        }
-        // Caso Derecha Derecha
-        if (balance < -1 && repuesto.getCodigo().compareTo(nodo.getDerecha().getRepuesto().getCodigo()) > 0) {
+        // Caso Derecha Derecha (RR) -> Balance positivo (> 1) y clave mayor
+        if (balance > 1 && repuesto.getCodigo().compareTo(nodo.getDerecha().getRepuesto().getCodigo()) > 0) {
             historialBalanceo.add("Caso identificado: Derecha-Derecha (RR)");
             return rotacionIzquierda(nodo);
         }
-        // Caso Izquierda Derecha
-        if (balance > 1 && repuesto.getCodigo().compareTo(nodo.getIzquierda().getRepuesto().getCodigo()) > 0) {
-            historialBalanceo.add("Caso identificado: Izquierda-Derecha (LR) -> Requiere rotación doble");
-            nodo.setIzquierda(rotacionIzquierda(nodo.getIzquierda()));
+        // Caso Izquierda Izquierda (LL) -> Balance negativo (< -1) y clave menor
+        if (balance < -1 && repuesto.getCodigo().compareTo(nodo.getIzquierda().getRepuesto().getCodigo()) < 0) {
+            historialBalanceo.add("Caso identificado: Izquierda-Izquierda (LL)");
             return rotacionDerecha(nodo);
         }
-        // Caso Derecha Izquierda
-        if (balance < -1 && repuesto.getCodigo().compareTo(nodo.getDerecha().getRepuesto().getCodigo()) < 0) {
+        // Caso Derecha Izquierda (RL) -> Balance positivo (> 1) y clave menor
+        if (balance > 1 && repuesto.getCodigo().compareTo(nodo.getDerecha().getRepuesto().getCodigo()) < 0) {
             historialBalanceo.add("Caso identificado: Derecha-Izquierda (RL) -> Requiere rotación doble");
             nodo.setDerecha(rotacionDerecha(nodo.getDerecha()));
             return rotacionIzquierda(nodo);
+        }
+        // Caso Izquierda Derecha (LR) -> Balance negativo (< -1) y clave mayor
+        if (balance < -1 && repuesto.getCodigo().compareTo(nodo.getIzquierda().getRepuesto().getCodigo()) > 0) {
+            historialBalanceo.add("Caso identificado: Izquierda-Derecha (LR) -> Requiere rotación doble");
+            nodo.setIzquierda(rotacionIzquierda(nodo.getIzquierda()));
+            return rotacionDerecha(nodo);
         }
 
         return nodo;
@@ -141,8 +140,10 @@ public class AVLRepuestos {
     }
 
     // --- RECORRIDOS ---
+    public void recorrerInorden(Consumer<Repuesto> accion) {
+        recorrerInorden(raiz, accion);
+    }
 
-    public void recorrerInorden(Consumer<Repuesto> accion) { recorrerInorden(raiz, accion); }
     private void recorrerInorden(NodoRepuesto nodo, Consumer<Repuesto> accion) {
         if (nodo != null) {
             recorrerInorden(nodo.getIzquierda(), accion);
@@ -151,7 +152,10 @@ public class AVLRepuestos {
         }
     }
 
-    public void recorrerPreorden(Consumer<Repuesto> accion) { recorrerPreorden(raiz, accion); }
+    public void recorrerPreorden(Consumer<Repuesto> accion) {
+        recorrerPreorden(raiz, accion);
+    }
+
     private void recorrerPreorden(NodoRepuesto nodo, Consumer<Repuesto> accion) {
         if (nodo != null) {
             accion.accept(nodo.getRepuesto());
@@ -160,13 +164,128 @@ public class AVLRepuestos {
         }
     }
 
-    public void recorrerPostorden(Consumer<Repuesto> accion) { recorrerPostorden(raiz, accion); }
+    public void recorrerPostorden(Consumer<Repuesto> accion) {
+        recorrerPostorden(raiz, accion);
+    }
+
     private void recorrerPostorden(NodoRepuesto nodo, Consumer<Repuesto> accion) {
         if (nodo != null) {
             recorrerPostorden(nodo.getIzquierda(), accion);
             recorrerPostorden(nodo.getDerecha(), accion);
             accion.accept(nodo.getRepuesto());
         }
+    }
+    // --- ELIMINACIÓN AVL ---
+
+    public boolean eliminarPredecesor(String codigo) {
+        if (buscarIndexada(codigo) == null) {
+            return false;
+        }
+        historialBalanceo.clear();
+        raiz = eliminarNodo(raiz, codigo.trim().toUpperCase(java.util.Locale.ROOT), true);
+        return true;
+    }
+
+    public boolean eliminarSucesor(String codigo) {
+        if (buscarIndexada(codigo) == null) {
+            return false;
+        }
+        historialBalanceo.clear();
+        raiz = eliminarNodo(raiz, codigo.trim().toUpperCase(java.util.Locale.ROOT), false);
+        return true;
+    }
+
+    private NodoRepuesto eliminarNodo(NodoRepuesto nodo, String codigo, boolean usarPredecesor) {
+        if (nodo == null) {
+            return null;
+        }
+
+        int comparacion = codigo.compareTo(nodo.getRepuesto().getCodigo());
+
+        // 1. Fase de búsqueda y eliminación estándar estilo ABB
+        if (comparacion < 0) {
+            nodo.setIzquierda(eliminarNodo(nodo.getIzquierda(), codigo, usarPredecesor));
+        } else if (comparacion > 0) {
+            nodo.setDerecha(eliminarNodo(nodo.getDerecha(), codigo, usarPredecesor));
+        } else {
+            // Nodo a eliminar encontrado
+            if (nodo.getIzquierda() == null) {
+                return nodo.getDerecha();
+            }
+            if (nodo.getDerecha() == null) {
+                return nodo.getIzquierda();
+            }
+
+            // Tiene dos hijos: aplicar estrategia
+            if (usarPredecesor) {
+                NodoRepuesto max = encontrarMaximo(nodo.getIzquierda());
+                nodo.setRepuesto(max.getRepuesto());
+                nodo.setIzquierda(eliminarNodo(nodo.getIzquierda(), max.getRepuesto().getCodigo(), usarPredecesor));
+            } else {
+                NodoRepuesto min = encontrarMinimo(nodo.getDerecha());
+                nodo.setRepuesto(min.getRepuesto());
+                nodo.setDerecha(eliminarNodo(nodo.getDerecha(), min.getRepuesto().getCodigo(), usarPredecesor));
+            }
+        }
+
+        // Si el árbol tenía un solo nodo, retornar null directamente
+        if (nodo == null) {
+            return null;
+        }
+
+        // 2. Fase de rebalanceo (Retroceso recursivo)
+        // Actualizamos altura
+        nodo.setAltura(1 + Math.max(obtenerAltura(nodo.getIzquierda()), obtenerAltura(nodo.getDerecha())));
+
+        // Obtenemos balance con la fórmula oficial (Derecha - Izquierda)
+        int balance = obtenerBalance(nodo);
+
+        if (balance > 1 || balance < -1) {
+            historialBalanceo.add("Desbalance post-eliminación en nodo: " + nodo.getRepuesto().getCodigo() + " (Factor: " + balance + ")");
+        }
+
+        // Para la eliminación, los casos dependen del balance de los subárboles hijos
+        // Caso Derecha Derecha (RR): Balance > 1 y el hijo derecho está inclinado a la derecha o balanceado (>= 0)
+        if (balance > 1 && obtenerBalance(nodo.getDerecha()) >= 0) {
+            historialBalanceo.add("Caso identificado: Derecha-Derecha (RR) post-eliminación");
+            return rotacionIzquierda(nodo);
+        }
+
+        // Caso Izquierda Izquierda (LL): Balance < -1 y el hijo izquierdo está inclinado a la izquierda o balanceado (<= 0)
+        if (balance < -1 && obtenerBalance(nodo.getIzquierda()) <= 0) {
+            historialBalanceo.add("Caso identificado: Izquierda-Izquierda (LL) post-eliminación");
+            return rotacionDerecha(nodo);
+        }
+
+        // Caso Derecha Izquierda (RL): Balance > 1 y el hijo derecho está inclinado a la izquierda (< 0)
+        if (balance > 1 && obtenerBalance(nodo.getDerecha()) < 0) {
+            historialBalanceo.add("Caso identificado: Derecha-Izquierda (RL) post-eliminación");
+            nodo.setDerecha(rotacionDerecha(nodo.getDerecha()));
+            return rotacionIzquierda(nodo);
+        }
+
+        // Caso Izquierda Derecha (LR): Balance < -1 y el hijo izquierdo está inclinado a la derecha (> 0)
+        if (balance < -1 && obtenerBalance(nodo.getIzquierda()) > 0) {
+            historialBalanceo.add("Caso identificado: Izquierda-Derecha (LR) post-eliminación");
+            nodo.setIzquierda(rotacionIzquierda(nodo.getIzquierda()));
+            return rotacionDerecha(nodo);
+        }
+
+        return nodo;
+    }
+
+    private NodoRepuesto encontrarMaximo(NodoRepuesto nodo) {
+        while (nodo.getDerecha() != null) {
+            nodo = nodo.getDerecha();
+        }
+        return nodo;
+    }
+
+    private NodoRepuesto encontrarMinimo(NodoRepuesto nodo) {
+        while (nodo.getIzquierda() != null) {
+            nodo = nodo.getIzquierda();
+        }
+        return nodo;
     }
 
     private void precargar() {

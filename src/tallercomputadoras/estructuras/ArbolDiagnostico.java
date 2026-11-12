@@ -66,4 +66,34 @@ public class ArbolDiagnostico {
             accion.accept(nodo.getPaso());
         }
     }
+    // --- PODA GENÉRICA (ELIMINACIÓN) ---
+    
+    public boolean podar(String id) {
+        String idBuscado = id.trim().toUpperCase(java.util.Locale.ROOT);
+        
+        if (raiz != null && raiz.getPaso().getId().toUpperCase(java.util.Locale.ROOT).equals(idBuscado)) {
+            raiz = null; // Si se elimina la raíz, se borra todo el árbol
+            return true;
+        }
+        
+        return podarRecursivo(raiz, idBuscado);
+    }
+    
+    private boolean podarRecursivo(NodoDiagnostico nodo, String idBuscado) {
+        if (nodo == null) return false;
+        
+        // Verificamos si los hijos coinciden para cortar el enlace desde el padre
+        if (nodo.getHijoSi() != null && nodo.getHijoSi().getPaso().getId().toUpperCase(java.util.Locale.ROOT).equals(idBuscado)) {
+            nodo.setHijoSi(null);
+            return true;
+        }
+        
+        if (nodo.getHijoNo() != null && nodo.getHijoNo().getPaso().getId().toUpperCase(java.util.Locale.ROOT).equals(idBuscado)) {
+            nodo.setHijoNo(null);
+            return true;
+        }
+        
+        // Continuamos buscando en el resto de ramas
+        return podarRecursivo(nodo.getHijoSi(), idBuscado) || podarRecursivo(nodo.getHijoNo(), idBuscado);
+    }
 }

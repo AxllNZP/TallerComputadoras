@@ -21,11 +21,11 @@ public class FrmOrdenes extends javax.swing.JFrame {
 
     /**
      * Creates new form FrmOrdenes
+     * @param lista
      */
     public FrmOrdenes(ListaOrdenes lista) {
         initComponents();
         this.lista = lista;
-        initComponents();
         configurarTabla();
         mostrarOrdenes();
         setLocationRelativeTo(null);
