@@ -22,7 +22,6 @@ public class ListaOrdenes {
 
     /*
      * Búsqueda Secuencial (Lineal).
-     * Complejidad: O(n).
      * Criterio: Itera secuencialmente nodo por nodo desde el puntero inicial ('primero') de la estructura.
      */
     public OrdenReparacion buscarPorCodigo(String codigo) {

@@ -5,9 +5,11 @@ import tallercomputadoras.modelo.AtencionDiagnostico;
 public class ColaPrioridades {
 
     private NodoAtencion primero;
+    private NodoAtencion ultimo;
 
     public ColaPrioridades() {
         primero = null;
+        ultimo = null;
         precargar();
     }
 
@@ -46,13 +48,25 @@ public class ColaPrioridades {
         }
 
         NodoAtencion nuevo = new NodoAtencion(atencion);
-        boolean vaAlFrente = primero == null
-                || atencion.getPrioridad() < primero.getAtencion().getPrioridad();
 
-        if (vaAlFrente) {
+        /*
+         * Inserción ordenada por prioridad (1 = Alta, 2 = Media, 3 = Baja).
+         * Entre prioridades iguales se respeta el orden de llegada (FIFO).
+         */
+        if (primero == null) {
+            // Cola vacía: el nuevo nodo es el primero y el último.
+            primero = nuevo;
+            ultimo = nuevo;
+        } else if (atencion.getPrioridad() < primero.getAtencion().getPrioridad()) {
+            // Inserción al inicio.
             nuevo.setSiguiente(primero);
             primero = nuevo;
+        } else if (atencion.getPrioridad() >= ultimo.getAtencion().getPrioridad()) {
+            // Inserción al final: se enlaza directamente con 'ultimo'.
+            ultimo.setSiguiente(nuevo);
+            ultimo = nuevo;
         } else {
+            // Inserción intermedia: avanza tras los de prioridad igual o mayor.
             NodoAtencion actual = primero;
 
             while (actual.getSiguiente() != null
@@ -70,9 +84,13 @@ public class ColaPrioridades {
     public AtencionDiagnostico atender() {
         AtencionDiagnostico atencionAtendida = null;
 
+        // Se extrae desde 'primero'; si la cola queda vacía, 'ultimo' vuelve a null.
         if (primero != null) {
             NodoAtencion atendido = primero;
             primero = atendido.getSiguiente();
+            if (primero == null) {
+                ultimo = null;
+            }
             atendido.setSiguiente(null);
             atencionAtendida = atendido.getAtencion();
         }

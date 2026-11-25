@@ -42,22 +42,53 @@ public class ABBRepuestos {
 
     public Repuesto buscarIndexada(String codigo) {
         String clave = codigo.trim().toUpperCase(java.util.Locale.ROOT);
-        NodoRepuesto actual = raiz;
         operacionesBuscadas = 0;
+        return buscarIndexada(raiz, clave);
+    }
 
-        while (actual != null) {
-            operacionesBuscadas++;
-            int comparacion = clave.compareTo(actual.getRepuesto().getCodigo());
-
-            if (comparacion == 0) {
-                return actual.getRepuesto();
-            } else if (comparacion < 0) {
-                actual = actual.getIzquierda();
-            } else {
-                actual = actual.getDerecha();
-            }
+    // Búsqueda recursiva por orden del ABB: en cada nivel descarta un subárbol.
+    private Repuesto buscarIndexada(NodoRepuesto nodo, String clave) {
+        if (nodo == null) {
+            return null;
         }
-        return null;
+
+        operacionesBuscadas++;
+        int comparacion = clave.compareTo(nodo.getRepuesto().getCodigo());
+
+        if (comparacion == 0) {
+            return nodo.getRepuesto();
+        }
+        if (comparacion < 0) {
+            return buscarIndexada(nodo.getIzquierda(), clave);
+        }
+        return buscarIndexada(nodo.getDerecha(), clave);
+    }
+
+    public Repuesto buscarSecuencial(String codigo) {
+        String clave = codigo.trim().toUpperCase(java.util.Locale.ROOT);
+        return buscarSecuencial(raiz, clave);
+    }
+
+    // Búsqueda secuencial recursiva en preorden: visita nodo por nodo, O(n),
+    // sin aprovechar el orden del árbol, y se detiene al encontrar el código.
+    private Repuesto buscarSecuencial(NodoRepuesto nodo, String clave) {
+        if (nodo == null) {
+            return null;
+        }
+
+        String actual = nodo.getRepuesto().getCodigo().trim()
+                .toUpperCase(java.util.Locale.ROOT);
+
+        if (actual.equals(clave)) {
+            return nodo.getRepuesto();
+        }
+
+        Repuesto encontrado = buscarSecuencial(nodo.getIzquierda(), clave);
+
+        if (encontrado == null) {
+            encontrado = buscarSecuencial(nodo.getDerecha(), clave);
+        }
+        return encontrado;
     }
 
     // --- RECORRIDOS ---
@@ -151,18 +182,20 @@ public class ABBRepuestos {
         return nodo;
     }
 
+    // El máximo es el nodo más a la derecha (recursivo).
     private NodoRepuesto encontrarMaximo(NodoRepuesto nodo) {
-        while (nodo.getDerecha() != null) {
-            nodo = nodo.getDerecha();
+        if (nodo.getDerecha() == null) {
+            return nodo;
         }
-        return nodo;
+        return encontrarMaximo(nodo.getDerecha());
     }
 
+    // El mínimo es el nodo más a la izquierda (recursivo).
     private NodoRepuesto encontrarMinimo(NodoRepuesto nodo) {
-        while (nodo.getIzquierda() != null) {
-            nodo = nodo.getIzquierda();
+        if (nodo.getIzquierda() == null) {
+            return nodo;
         }
-        return nodo;
+        return encontrarMinimo(nodo.getIzquierda());
     }
 
     private void precargar() {

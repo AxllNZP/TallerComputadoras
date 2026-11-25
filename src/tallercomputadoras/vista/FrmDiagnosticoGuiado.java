@@ -19,6 +19,8 @@ public class FrmDiagnosticoGuiado extends javax.swing.JFrame {
      */
     public FrmDiagnosticoGuiado() {
         initComponents();
+        // Al cerrar con la X solo se libera esta ventana; la aplicación continúa.
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
     }
 
@@ -77,7 +79,7 @@ public class FrmDiagnosticoGuiado extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(243, 243, 243)
                         .addComponent(jLabel1)
-                        .addGap(0, 334, Short.MAX_VALUE))
+                        .addGap(0, 292, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE)

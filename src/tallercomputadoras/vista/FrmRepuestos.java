@@ -390,22 +390,10 @@ public class FrmRepuestos extends javax.swing.JFrame {
             return;
         }
 
-        // Usamos el recorrido completo del árbol para emular una búsqueda secuencial O(N) obligatoria para la rúbrica
-        final Repuesto[] encontrado = {null};
-        java.util.function.Consumer<Repuesto> buscar = r -> {
-            if (encontrado[0] == null && r.getCodigo().equals(codigo)) {
-                encontrado[0] = r;
-            }
-        };
-
-        if (cmbTipoArbol.getSelectedIndex() == 0) {
-            arbolABB.recorrerPreorden(buscar);
-        } else {
-            arbolAVL.recorrerPreorden(buscar);
-        }
+        Repuesto encontrado = arbolABB.buscarSecuencial(codigo);
 
         lblOperaciones.setText("Pasos de iteración: O(N) Secuencial");
-        mostrarResultado(encontrado[0]);
+        mostrarResultado(encontrado);
     }//GEN-LAST:event_btnBuscarSecuencialActionPerformed
 
     private void btnBuscarIndexadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarIndexadaActionPerformed
