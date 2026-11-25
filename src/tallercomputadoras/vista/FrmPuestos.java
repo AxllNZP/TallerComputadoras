@@ -1,6 +1,5 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+Arreglos Bidimensionales / Matrices (Estructura Estática Tabular) y Acceso Directo Indexado en $O(1)$
  */
 package tallercomputadoras.vista;
 

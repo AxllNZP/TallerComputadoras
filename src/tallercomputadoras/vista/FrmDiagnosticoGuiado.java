@@ -1,6 +1,5 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+Árboles Binarios (Árbol de Decisión Jerárquico), Recorridos en Profundidad (Preorden, Inorden, Postorden) y Poda Recursiva
  */
 package tallercomputadoras.vista;
 

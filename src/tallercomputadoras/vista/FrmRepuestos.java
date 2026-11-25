@@ -1,6 +1,6 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+Árboles Binarios de Búsqueda (ABB) y Árboles Autobalanceados (AVL) — Comparativa de Búsqueda ($O(\log n)$ vs. $O(n)$)
+Recorridos y Eliminación por Predecesor/Sucesor
  */
 package tallercomputadoras.vista;
 

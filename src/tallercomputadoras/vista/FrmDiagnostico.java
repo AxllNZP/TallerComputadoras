@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+/*Colas con Prioridad (Estructura Dinámica Enlazada con Punteros primero y ultimo) y Disciplina FIFO*/
 package tallercomputadoras.vista;
 
 import javax.swing.JOptionPane;

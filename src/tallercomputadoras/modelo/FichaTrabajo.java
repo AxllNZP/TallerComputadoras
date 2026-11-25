@@ -1,3 +1,4 @@
+/*Pilas Dinámicas Enlazadas (LIFO: Last-In, First-Out) — Patrón Deshacer (Undo)*/
 package tallercomputadoras.modelo;
 
 public class FichaTrabajo {

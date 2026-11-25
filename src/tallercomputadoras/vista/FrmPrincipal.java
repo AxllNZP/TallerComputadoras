@@ -73,22 +73,22 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         jLabel1.setText("Taller de reparación de computadoras");
 
-        btnComputadoras.setText("Computadoras");
+        btnComputadoras.setText("Computadoras (Arreglo de Objetos estaticos)");
         btnComputadoras.addActionListener(this::btnComputadorasActionPerformed);
 
-        btnPuestos.setText("Puestos de trabajo");
+        btnPuestos.setText("Puestos de trabajo(Arreglo Bidimensional)");
         btnPuestos.addActionListener(this::btnPuestosActionPerformed);
 
-        btnOrdenes.setText("Órdenes de reparación");
+        btnOrdenes.setText("Órdenes de reparación (Lista Enlazada Simple)");
         btnOrdenes.addActionListener(this::btnOrdenesActionPerformed);
 
-        btnDiagnostico.setText("Atención para diagnóstico");
+        btnDiagnostico.setText("Atención para diagnóstico (Cola de Prioridades)");
         btnDiagnostico.addActionListener(this::btnDiagnosticoActionPerformed);
 
-        btnHistorial.setText("Historial de estados");
+        btnHistorial.setText("Historial de estados(Pila Dinámica (LIFO))");
         btnHistorial.addActionListener(this::btnHistorialActionPerformed);
 
-        btnRepuestos.setText("Repuestos");
+        btnRepuestos.setText("Repuestos(Árboles ABB y AVL)");
         btnRepuestos.addActionListener(this::btnRepuestosActionPerformed);
 
         btnSalir.setText("Salir");
@@ -115,6 +115,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 .addGap(46, 46, 46)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnSalir)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -129,8 +132,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
                                 .addGap(33, 33, 33))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnComputadoras)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnRepuestos)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel3)
                                 .addGap(70, 70, 70))))
@@ -138,19 +139,16 @@ public class FrmPrincipal extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(btnSalir)
-                                        .addGap(185, 185, 185))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(btnDiagnosticoGuiado)
-                                        .addGap(185, 185, 185)))
+                                    .addComponent(btnRepuestos, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnDiagnosticoGuiado))
+                                .addGap(185, 185, 185)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel5)
                                     .addComponent(jLabel6)))
                             .addComponent(btnHistorial)
                             .addComponent(btnDiagnostico)
                             .addComponent(btnOrdenes))
-                        .addContainerGap())))
+                        .addContainerGap(27, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -162,7 +160,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnComputadoras)
-                    .addComponent(btnRepuestos)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -180,9 +177,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 .addComponent(btnHistorial)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnDiagnosticoGuiado)
-                .addGap(22, 22, 22)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRepuestos)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addComponent(btnSalir)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
